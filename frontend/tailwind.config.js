@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily: {
         "figtree": ['Figtree', 'sans-serif'],
-        "shantell sans": ['Shantell Sans', 'sans-serif']
+        "shantell-sans": ['Shantell Sans', 'sans-serif']
       },
       colors: {
         'dark-blue': '#022B3A',
