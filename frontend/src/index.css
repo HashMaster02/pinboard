@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[type="checkbox"] {
+    opacity: 0.3;
+}
+
+[type="checkbox"] + label {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+[type="checkbox"] + label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 6px;
+    transform: translate(-50%, -50%);
+}
+
+[type="checkbox"]:checked + label::after {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    background-image: url(../src/assets/icons/check-solid.svg);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: translate(-50%, -50%);
+}
+
+[type="checkbox"]:checked + label, 
+[type="checkbox"]:checked + label > * {
+    color: #e1e5f2;
+    text-decoration: line-through;
+}
