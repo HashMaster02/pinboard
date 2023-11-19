@@ -2,7 +2,7 @@
 
 ### Pinboard is a web app designed to help college students manage their assignments. Create an assignment, add a due date, and Pinboard will do the rest.
 
-### ** _Note: This product is still in development. All features may not be available._ \***
+### **_Note: This product is still in development. All features may not be available._**
 
 ## Features
 
