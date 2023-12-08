@@ -1,4 +1,3 @@
-import React from "react";
 import { BsExclamationCircleFill } from "react-icons/bs";
 
 const colorPalette = {
@@ -11,9 +10,11 @@ const colorPalette = {
   pink: "text-[#ac80a0]",
 };
 
+// TODO: Add date logic (show warning when due date less than 2 days away; )
+
 function SingleTask({ id, group, task, dueDate, color }) {
   return (
-    <li className="flex items-center">
+    <li id="task-item" className="flex items-center">
       <input type="checkbox" id={id} />
       <label
         className="leading-[1.2rem] font-shantell-sans
