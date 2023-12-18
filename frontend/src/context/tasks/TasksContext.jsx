@@ -3,7 +3,7 @@ import { createContext, useState } from 'react';
 const TasksContext = createContext();
 
 export const TasksProvider = ({ children }) => {
-    const [tasks, setTasks] = useState([
+    const [todaysTasks, setTodaysTasks] = useState([
         {
             _id: 1,
             group: 'MATH-332',
@@ -39,17 +39,30 @@ export const TasksProvider = ({ children }) => {
     ]);
 
     function toggleCheck(id) {
-        const newTasks = tasks.map((task) => {
+        const newTasks = todaysTasks.map((task) => {
             if (task._id === id) {
                 return { ...task, checked: !task.checked };
             }
             return task;
         });
-        setTasks(newTasks);
+        setTodaysTasks(newTasks);
+    }
+
+    function deleteTask(id, pathname) {
+        if (pathname === '/tasks') {
+            const newTasks = todaysTasks.filter((task) => task._id !== id);
+            setTodaysTasks(newTasks);
+        }
     }
 
     return (
-        <TasksContext.Provider value={{ tasks, toggleCheck }}>
+        <TasksContext.Provider
+            value={{
+                todaysTasks,
+                toggleCheck,
+                deleteTask,
+            }}
+        >
             {children}
         </TasksContext.Provider>
     );

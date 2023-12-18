@@ -3,17 +3,16 @@ import Header from '../components/Header';
 import SingleTask from '../components/SingleTask';
 import { FaListCheck } from 'react-icons/fa6';
 import TasksContext from '../context/tasks/TasksContext';
-
-// TODO: Make delete button via a context menu
+import PopupMenu from '../components/PopupMenu';
 
 function Tasks() {
-    const { tasks } = useContext(TasksContext);
+    const { todaysTasks } = useContext(TasksContext);
 
     return (
         <>
             <Header title={'Tasks'} icon={<FaListCheck />} showDate />
-            <ul className="m-6 flex flex-col gap-4 ">
-                {tasks.map((task) => (
+            <ul className="m-6 flex flex-col gap-4">
+                {todaysTasks.map((task) => (
                     <SingleTask
                         key={task._id}
                         id={task._id}
