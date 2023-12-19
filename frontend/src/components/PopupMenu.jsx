@@ -4,11 +4,7 @@ import TasksContext from '../context/tasks/TasksContext';
 
 function PopupMenu({ id }) {
     const currentPath = useLocation().pathname;
-    const { deleteTask } = useContext(TasksContext);
-
-    function onRemoveTask() {
-        console.log('Removed', id);
-    }
+    const { deleteTask, moveTask } = useContext(TasksContext);
 
     return (
         <div
@@ -17,10 +13,13 @@ function PopupMenu({ id }) {
         >
             <ul>
                 <li className="py-1">
-                    <button onClick={() => onRemoveTask()}>
-                        Remove from Tasks
+                    <button onClick={() => moveTask(id, currentPath)}>
+                        {currentPath === '/tasks'
+                            ? 'Move to Assignments'
+                            : 'Add to Tasks'}
                     </button>
                 </li>
+
                 <li className="py-1 text-light-blue">
                     <button onClick={() => deleteTask(id, currentPath)}>
                         Delete Permanently

@@ -1,17 +1,17 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Header from '../components/Header';
 import SingleTask from '../components/SingleTask';
-import { FaListCheck } from 'react-icons/fa6';
 import TasksContext from '../context/tasks/TasksContext';
+import { FaClipboardList } from 'react-icons/fa6';
 
-function Tasks() {
-    const { todaysTasks } = useContext(TasksContext);
+function Assignments() {
+    const { pendingTasks } = useContext(TasksContext);
 
     return (
         <>
-            <Header title={'Tasks'} icon={<FaListCheck />} showDate />
+            <Header title={'Assignments'} icon={<FaClipboardList />} showDate />
             <ul className="m-6 flex flex-col gap-4">
-                {todaysTasks.map((task) => (
+                {pendingTasks.map((task) => (
                     <SingleTask
                         key={task._id}
                         id={task._id}
@@ -26,5 +26,4 @@ function Tasks() {
         </>
     );
 }
-
-export default Tasks;
+export default Assignments;

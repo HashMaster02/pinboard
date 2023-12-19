@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { BsExclamationCircleFill } from 'react-icons/bs';
 import { FaEllipsis } from 'react-icons/fa6';
 import TasksContext from '../context/tasks/TasksContext';
@@ -15,8 +16,9 @@ const colorPalette = {
 };
 
 function SingleTask({ id, group, task, dueDate, color, checked }) {
-    const { toggleCheck } = useContext(TasksContext);
+    const { toggleCheck, daysToDueDate } = useContext(TasksContext);
     const [showMenu, setShowMenu] = useState(false);
+    const pathname = useLocation().pathname;
 
     document.addEventListener('click', (e) => {
         if (showMenu && e.target.id !== 'menu-button') {
@@ -34,16 +36,20 @@ function SingleTask({ id, group, task, dueDate, color, checked }) {
     return (
         <div className="flex justify-between">
             <li id="task-item" className="flex items-center">
-                <input
-                    onChange={() => toggleCheck(id)}
-                    type="checkbox"
-                    checked={checked}
-                    id={id}
-                />
+                {pathname === '/tasks' && (
+                    <input
+                        onChange={() => toggleCheck(id)}
+                        type="checkbox"
+                        checked={checked}
+                        id={id}
+                    />
+                )}
                 <label
-                    className="leading-[1.2rem] font-shantell-sans
-						before:outline before:outline-2 before:outline-bluish-turqoise
-                        "
+                    className={
+                        pathname === '/tasks'
+                            ? 'leading-[1.2rem] font-shantell-sans before:outline before:outline-2 before:outline-bluish-turqoise'
+                            : 'leading-[1.2rem] font-shantell-sans'
+                    }
                     htmlFor={id}
                 >
                     <span
@@ -75,12 +81,6 @@ function SingleTask({ id, group, task, dueDate, color, checked }) {
             </div>
         </div>
     );
-}
-
-function daysToDueDate(due) {
-    // Calculates the number of days between today and date given
-    const today = new Date();
-    return (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24.0);
 }
 
 export default SingleTask;

@@ -2,8 +2,8 @@ import { createContext, useState } from 'react';
 
 const TasksContext = createContext();
 
-export const TasksProvider = ({ children }) => {
-    const [todaysTasks, setTodaysTasks] = useState([
+const userData = {
+    todaysTasks: [
         {
             _id: 1,
             group: 'MATH-332',
@@ -36,7 +36,46 @@ export const TasksProvider = ({ children }) => {
             color: 'pink',
             checked: false,
         },
-    ]);
+    ],
+    pendingTasks: [
+        {
+            _id: 5,
+            group: 'MATH-252',
+            todo: 'Section 3.6',
+            dueDate: '2023-03-20',
+            color: 'purple',
+            checked: false,
+        },
+        {
+            _id: 6,
+            group: 'CS-581',
+            todo: 'MP3',
+            dueDate: '2024-08-19',
+            color: 'red',
+            checked: false,
+        },
+        {
+            _id: 7,
+            group: 'ITMD-440',
+            todo: 'Lab 9',
+            dueDate: '2023-12-01',
+            color: 'yellow',
+            checked: false,
+        },
+        {
+            _id: 8,
+            group: 'IPRO-497',
+            todo: 'Assignment 4',
+            dueDate: '2023-08-15',
+            color: 'orange',
+            checked: false,
+        },
+    ],
+};
+
+export const TasksProvider = ({ children }) => {
+    const [todaysTasks, setTodaysTasks] = useState(userData.todaysTasks);
+    const [pendingTasks, setPendingTasks] = useState(userData.pendingTasks);
 
     function toggleCheck(id) {
         const newTasks = todaysTasks.map((task) => {
@@ -48,19 +87,57 @@ export const TasksProvider = ({ children }) => {
         setTodaysTasks(newTasks);
     }
 
+    function moveTask(id, pathname) {
+        if (pathname === '/tasks') {
+            // Find index of element and grab the element
+            const element =
+                todaysTasks[todaysTasks.findIndex((task) => task._id === id)];
+
+            // Remove element from todaysTasks
+            const newTasks = todaysTasks.filter((task) => task._id !== id);
+            setTodaysTasks(newTasks);
+
+            // Add element to pendingTasks
+            setPendingTasks([...pendingTasks, element]);
+        } else if (pathname === '/assignments') {
+            // Find index of element and grab the element
+            const element =
+                pendingTasks[pendingTasks.findIndex((task) => task._id === id)];
+
+            // Remove element from pendingTasks
+            const newTasks = pendingTasks.filter((task) => task._id !== id);
+            setPendingTasks(newTasks);
+
+            // Add element to todaysTasks
+            setTodaysTasks([...todaysTasks, element]);
+        }
+    }
+
     function deleteTask(id, pathname) {
         if (pathname === '/tasks') {
             const newTasks = todaysTasks.filter((task) => task._id !== id);
             setTodaysTasks(newTasks);
+        } else if (pathname === '/assignments') {
+            const newTasks = pendingTasks.filter((task) => task._id !== id);
+            setPendingTasks(newTasks);
         }
+    }
+
+    function daysToDueDate(due) {
+        // Calculates the number of days between today and date given
+        const today = new Date();
+        return (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24.0);
     }
 
     return (
         <TasksContext.Provider
             value={{
                 todaysTasks,
+                pendingTasks,
                 toggleCheck,
                 deleteTask,
+                daysToDueDate,
+                moveTask,
             }}
         >
             {children}
