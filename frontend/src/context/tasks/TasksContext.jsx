@@ -6,76 +6,86 @@ const userData = {
     todaysTasks: [
         {
             _id: 1,
-            group: 'MATH-332',
+            group: 'math-332',
             todo: 'Written Assignment 12',
             dueDate: '2023-12-20',
-            color: 'purple',
+            color: '#54428e',
             checked: false,
         },
         {
             _id: 2,
-            group: 'CS-350',
+            group: 'cs-350',
             todo: 'MP1',
             dueDate: '2024-10-18',
-            color: 'red',
+            color: '#ff1d15',
             checked: false,
         },
         {
             _id: 3,
-            group: 'ITMD-361',
+            group: 'itmd-361',
             todo: 'Lab 6',
             dueDate: '2023-10-01',
-            color: 'yellow',
+            color: '#edae49',
             checked: false,
         },
         {
             _id: 4,
-            group: 'ITMD-362',
+            group: 'itmd-362',
             todo: 'Lab 1',
             dueDate: '2023-05-24',
-            color: 'pink',
+            color: '#ac80a0',
             checked: false,
         },
     ],
     pendingTasks: [
         {
             _id: 5,
-            group: 'MATH-252',
+            group: 'math-252',
             todo: 'Section 3.6',
-            dueDate: '2023-03-20',
-            color: 'purple',
+            dueDate: '2024-03-20',
+            color: '#54428e',
             checked: false,
         },
         {
             _id: 6,
-            group: 'CS-581',
+            group: 'cs-581',
             todo: 'MP3',
             dueDate: '2024-08-19',
-            color: 'red',
+            color: '#ff1d15',
             checked: false,
         },
         {
             _id: 7,
-            group: 'ITMD-440',
+            group: 'itmd-440',
             todo: 'Lab 9',
-            dueDate: '2023-12-01',
-            color: 'yellow',
+            dueDate: '2024-12-01',
+            color: '#edae49',
             checked: false,
         },
         {
             _id: 8,
-            group: 'IPRO-497',
+            group: 'ipro-497',
             todo: 'Assignment 4',
             dueDate: '2023-08-15',
-            color: 'orange',
+            color: '#ffb238',
             checked: false,
         },
+    ],
+    colors: [
+        '#ff1d15',
+        '#6bbaec',
+        '#04724d',
+        '#edae49',
+        '#ffb238',
+        '#54428e',
+        '#ac80a0',
     ],
 };
 
 export const TasksProvider = ({ children }) => {
     const [todaysTasks, setTodaysTasks] = useState(userData.todaysTasks);
     const [pendingTasks, setPendingTasks] = useState(userData.pendingTasks);
+    const [colorPalette, setColorPalette] = useState(userData.colors);
 
     function toggleCheck(id) {
         const newTasks = todaysTasks.map((task) => {
@@ -134,6 +144,7 @@ export const TasksProvider = ({ children }) => {
             value={{
                 todaysTasks,
                 pendingTasks,
+                colorPalette,
                 toggleCheck,
                 deleteTask,
                 daysToDueDate,

@@ -1,24 +1,24 @@
 import { useContext, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BsExclamationCircleFill } from 'react-icons/bs';
-import { FaEllipsis } from 'react-icons/fa6';
+import { FaEllipsis, FaTriangleExclamation } from 'react-icons/fa6';
 import TasksContext from '../context/tasks/TasksContext';
 import PopupMenu from './PopupMenu';
 
-const colorPalette = {
-    red: 'text-[#ff1d15]',
-    blue: 'text-[#6bbaec]',
-    green: 'text-[#04724d]',
-    yellow: 'text-[#edae49]',
-    orange: 'text-[#ffb238]',
-    purple: 'text-[#54428e]',
-    pink: 'text-[#ac80a0]',
-};
-
 function SingleTask({ id, group, task, dueDate, color, checked }) {
-    const { toggleCheck, daysToDueDate } = useContext(TasksContext);
+    const { toggleCheck, daysToDueDate, colorPalette } =
+        useContext(TasksContext);
     const [showMenu, setShowMenu] = useState(false);
     const pathname = useLocation().pathname;
+    const daysLeft = daysToDueDate(dueDate);
+
+    useEffect(() => {
+        if (checked) {
+            document.getElementById(`task-${id}`).style.color = '#e1e5f2';
+            return;
+        }
+        document.getElementById(`task-${id}`).style.color = color;
+    });
 
     document.addEventListener('click', (e) => {
         if (showMenu && e.target.id !== 'menu-button') {
@@ -52,20 +52,16 @@ function SingleTask({ id, group, task, dueDate, color, checked }) {
                     }
                     htmlFor={id}
                 >
-                    <span
-                        className={` font-medium ${
-                            colorPalette[color]
-                                ? colorPalette[color]
-                                : 'text-black'
-                        }`}
-                    >
+                    <span id={`task-${id}`} className="font-medium uppercase">
                         {group}
                     </span>{' '}
                     {task}
                     <small className="block font-light text-bluish-turqoise text-xs">
-                        {daysToDueDate(dueDate) <= 1 && (
-                            <BsExclamationCircleFill className="inline-block mr-1 text-red-600" />
-                        )}
+                        {daysLeft > 0 && daysLeft <= 2 ? (
+                            <FaTriangleExclamation className="inline-block mr-1 text-yellow-400" />
+                        ) : daysLeft <= 0 ? (
+                            <BsExclamationCircleFill className="inline-block mr-1 text-red-500" />
+                        ) : null}
                         Due {dueDate.toDateString()}
                     </small>
                 </label>

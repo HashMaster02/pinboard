@@ -2,19 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-[type="checkbox"] {
+[type='checkbox'] {
     opacity: 0.3;
 }
 
-[type="checkbox"] + label {
+[type='checkbox'] + label {
     position: relative;
     padding-left: 30px;
     cursor: pointer;
     display: inline-block;
 }
 
-[type="checkbox"] + label::before {
-    content: "";
+[type='checkbox'] + label::before {
+    content: '';
     position: absolute;
     left: 0;
     top: 50%;
@@ -25,8 +25,8 @@
     transform: translate(-50%, -50%);
 }
 
-[type="checkbox"]:checked + label::after {
-    content: "";
+[type='checkbox']:checked + label::after {
+    content: '';
     position: absolute;
     left: -1px;
     top: 50%;
@@ -39,8 +39,8 @@
     transform: translate(-50%, -50%);
 }
 
-[type="checkbox"]:checked + label, 
-[type="checkbox"]:checked + label > * {
+[type='checkbox']:checked + label,
+[type='checkbox']:checked + label > * {
     color: #e1e5f2;
     text-decoration: line-through;
 }

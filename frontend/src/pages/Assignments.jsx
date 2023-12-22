@@ -1,8 +1,9 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import SingleTask from '../components/SingleTask';
 import TasksContext from '../context/tasks/TasksContext';
-import { FaClipboardList } from 'react-icons/fa6';
+import { FaClipboardList, FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 
 function Assignments() {
     const { pendingTasks } = useContext(TasksContext);
@@ -23,6 +24,14 @@ function Assignments() {
                     />
                 ))}
             </ul>
+            <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
+                <Link to="/">
+                    <FaCircleLeft className="ml-8" />
+                </Link>
+                <Link to="/assignments/create">
+                    <FaCirclePlus className="mr-8" />
+                </Link>
+            </div>
         </>
     );
 }
