@@ -11,7 +11,7 @@ function Tasks() {
     return (
         <div className="h-full">
             <Header title={'Tasks'} icon={<FaListCheck />} showDate />
-            <ul className="m-6 flex flex-col gap-4">
+            <ul className="m-6 space-y-4">
                 {todaysTasks.map((task) => (
                     <SingleTask
                         key={task._id}

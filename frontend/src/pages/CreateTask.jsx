@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 import TasksContext from '../context/tasks/TasksContext';
+import FormButton from '../components/FormButton';
 
 // TODO: Let user choose a color from a color palette
 
@@ -33,6 +34,12 @@ function CreateTask() {
 
     function createTask(e) {
         e.preventDefault();
+
+        if (!group || !todo || !dueDate) {
+            alert('Please fill out all fields');
+            return;
+        }
+
         const newTask = {
             ...formData,
             checked: false,
@@ -51,10 +58,7 @@ function CreateTask() {
     return (
         <>
             <Header title={'Create Task'} icon={<FaCirclePlus />} />
-            <form
-                onSubmit={createTask}
-                className="p-8 grid gap-10 font-figtree"
-            >
+            <form onSubmit={createTask} className="p-8 space-y-10 font-figtree">
                 <div className="flex flex-col">
                     <label htmlFor="group" className="text-baby-white">
                         Class
@@ -100,9 +104,7 @@ function CreateTask() {
                         className="border-b-2 border-light-blue outline-none"
                     />
                 </div>
-                <button className="block m-auto px-20 py-4 max-w-xs bg-bluish-turqoise text-white rounded-full">
-                    Create
-                </button>
+                <FormButton label={'Create'} />
             </form>
             <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
                 <Link to={`/${dashboard}`}>

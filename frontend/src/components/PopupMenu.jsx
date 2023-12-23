@@ -9,10 +9,10 @@ function PopupMenu({ id }) {
     return (
         <div
             id="popup-menu"
-            className="absolute top-0 left-[-170px] p-4 rounded-md z-40 bg-bluish-turqoise text-white font-figtree"
+            className="absolute overflow-hidden top-0 left-[-170px] rounded-md z-40 bg-bluish-turqoise text-white font-figtree"
         >
-            <ul>
-                <li className="py-1">
+            <ul className="py-4">
+                <li className="px-4 py-2 hover:bg-light-blue hover:text-dark-blue">
                     <button onClick={() => moveTask(id, currentPath)}>
                         {currentPath === '/tasks'
                             ? 'Move to Assignments'
@@ -20,7 +20,7 @@ function PopupMenu({ id }) {
                     </button>
                 </li>
 
-                <li className="py-1 text-light-blue">
+                <li className="px-4 py-2 text-light-blue hover:bg-light-blue hover:text-dark-blue">
                     <button onClick={() => deleteTask(id, currentPath)}>
                         Delete Permanently
                     </button>
