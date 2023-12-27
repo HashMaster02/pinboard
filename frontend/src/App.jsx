@@ -10,6 +10,7 @@ import About from './pages/About';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import PrivateRoute from './components/PrivateRoute';
+import Loading from './components/Loading';
 
 function App() {
     return (
@@ -27,6 +28,8 @@ function App() {
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/settings" element={<Settings />} />
+
+                    <Route path="/loading" element={<Loading />} />
                 </Routes>
             </Router>
         </TasksProvider>
