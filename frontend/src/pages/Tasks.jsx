@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaListCheck, FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 import Header from '../components/Header';
@@ -6,7 +6,18 @@ import SingleTask from '../components/SingleTask';
 import TasksContext from '../context/tasks/TasksContext';
 
 function Tasks() {
-    const { todaysTasks } = useContext(TasksContext);
+    const [loading, setLoading] = useState(true);
+    const { todaysTasks, fetchTodaysTasks } = useContext(TasksContext);
+
+    useEffect(() => {
+        fetchTodaysTasks().then(() => {
+            setLoading(false);
+        });
+    }, [loading]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="h-full">
@@ -18,7 +29,7 @@ function Tasks() {
                         id={task._id}
                         group={task.group}
                         task={task.todo}
-                        dueDate={new Date(task.dueDate.split('-'))}
+                        dueDate={new Date(task.dueDate.toDate())} // toDate() is a method of the firebase.firestore.Timestamp class
                         color={task.color}
                         checked={task.checked}
                     />

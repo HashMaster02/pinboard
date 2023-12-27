@@ -1,93 +1,113 @@
 import { createContext, useState } from 'react';
-
+import { useAuthStatus } from '../../hooks/useAuthStatus';
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    getDoc,
+    updateDoc,
+    deleteDoc,
+    setDoc,
+    Timestamp,
+} from 'firebase/firestore';
+import { db } from '../../firebase.config';
 const TasksContext = createContext();
 
-const userData = {
-    todaysTasks: [
-        {
-            _id: 1,
-            group: 'math-332',
-            todo: 'Written Assignment 12',
-            dueDate: '2023-12-20',
-            color: '#54428e',
-            checked: false,
-        },
-        {
-            _id: 2,
-            group: 'cs-350',
-            todo: 'MP1',
-            dueDate: '2024-10-18',
-            color: '#ff1d15',
-            checked: false,
-        },
-        {
-            _id: 3,
-            group: 'itmd-361',
-            todo: 'Lab 6',
-            dueDate: '2023-10-01',
-            color: '#edae49',
-            checked: false,
-        },
-        {
-            _id: 4,
-            group: 'itmd-362',
-            todo: 'Lab 1',
-            dueDate: '2023-05-24',
-            color: '#ac80a0',
-            checked: false,
-        },
-    ],
-    pendingTasks: [
-        {
-            _id: 5,
-            group: 'math-252',
-            todo: 'Section 3.6',
-            dueDate: '2024-03-20',
-            color: '#54428e',
-            checked: false,
-        },
-        {
-            _id: 6,
-            group: 'cs-581',
-            todo: 'MP3',
-            dueDate: '2024-08-19',
-            color: '#ff1d15',
-            checked: false,
-        },
-        {
-            _id: 7,
-            group: 'itmd-440',
-            todo: 'Lab 9',
-            dueDate: '2024-12-01',
-            color: '#edae49',
-            checked: false,
-        },
-        {
-            _id: 8,
-            group: 'ipro-497',
-            todo: 'Assignment 4',
-            dueDate: '2023-08-15',
-            color: '#ffb238',
-            checked: false,
-        },
-    ],
-    colors: [
-        '#ff1d15',
-        '#6bbaec',
-        '#04724d',
-        '#edae49',
-        '#ffb238',
-        '#54428e',
-        '#ac80a0',
-    ],
-};
-
 export const TasksProvider = ({ children }) => {
-    const [todaysTasks, setTodaysTasks] = useState(userData.todaysTasks);
-    const [pendingTasks, setPendingTasks] = useState(userData.pendingTasks);
-    const [colorPalette, setColorPalette] = useState(userData.colors);
+    const { userId } = useAuthStatus();
+    const [todaysTasks, setTodaysTasks] = useState([]);
+    const [pendingTasks, setPendingTasks] = useState([]);
+    const [colorPalette, setColorPalette] = useState([]);
 
-    function toggleCheck(id) {
+    async function fetchTodaysTasks() {
+        const q = query(
+            collection(db, 'todays-tasks'),
+            where('user-id', '==', userId)
+        );
+        const querySnapshot = await getDocs(q);
+        const tasks = [];
+        querySnapshot.forEach((doc) => {
+            tasks.push(doc.data());
+        });
+        setTodaysTasks(tasks);
+    }
+
+    async function fetchPendingTasks() {
+        const q = query(
+            collection(db, 'pending-tasks'),
+            where('user-id', '==', userId)
+        );
+        const querySnapshot = await getDocs(q);
+        const tasks = [];
+        querySnapshot.forEach((doc) => {
+            tasks.push(doc.data());
+        });
+        setPendingTasks(tasks);
+    }
+
+    function fetchColorPalette() {
+        setColorPalette(dummyData.colors);
+    }
+
+    async function addTask(task, pathname) {
+        if (pathname === 'tasks') {
+            todaysTasks.push(task);
+
+            // Add to database
+
+            await setDoc(doc(db, 'todays-tasks', task._id), {
+                _id: task._id,
+                group: task.group,
+                todo: task.todo,
+                dueDate: new Timestamp(
+                    (task.dueDate.getTime() + 21600000) / 1000, // Add 6 hours to account for timezone difference
+                    0
+                ),
+                color: task.color,
+                checked: task.checked,
+                'user-id': userId,
+            });
+        } else if (pathname === 'assignments') {
+            pendingTasks.push(task);
+
+            // Add to database
+            await setDoc(doc(db, 'pending-tasks', task._id), {
+                _id: task._id,
+                group: task.group,
+                todo: task.todo,
+                dueDate: new Timestamp(
+                    (task.dueDate.getTime() + 21600000) / 1000, // Add 6 hours to account for timezone difference
+                    0
+                ),
+                color: task.color,
+                checked: task.checked,
+                'user-id': userId,
+            });
+        }
+    }
+
+    async function deleteTask(id, pathname) {
+        if (pathname === '/tasks') {
+            // Remove from state
+            const newTasks = todaysTasks.filter((task) => task._id !== id);
+            setTodaysTasks(newTasks);
+
+            // Remove from database
+            await deleteDoc(doc(db, 'todays-tasks', id));
+        } else if (pathname === '/assignments') {
+            // Remove from state
+            const newTasks = pendingTasks.filter((task) => task._id !== id);
+            setPendingTasks(newTasks);
+
+            // Remove from database
+            await deleteDoc(doc(db, 'pending-tasks', id));
+        }
+    }
+
+    async function toggleCheck(id) {
+        // Change locally in state
         const newTasks = todaysTasks.map((task) => {
             if (task._id === id) {
                 return { ...task, checked: !task.checked };
@@ -95,41 +115,28 @@ export const TasksProvider = ({ children }) => {
             return task;
         });
         setTodaysTasks(newTasks);
-    }
 
-    function moveTask(id, pathname) {
-        if (pathname === '/tasks') {
-            // Find index of element and grab the element
-            const element =
-                todaysTasks[todaysTasks.findIndex((task) => task._id === id)];
-
-            // Remove element from todaysTasks
-            const newTasks = todaysTasks.filter((task) => task._id !== id);
-            setTodaysTasks(newTasks);
-
-            // Add element to pendingTasks
-            setPendingTasks([...pendingTasks, element]);
-        } else if (pathname === '/assignments') {
-            // Find index of element and grab the element
-            const element =
-                pendingTasks[pendingTasks.findIndex((task) => task._id === id)];
-
-            // Remove element from pendingTasks
-            const newTasks = pendingTasks.filter((task) => task._id !== id);
-            setPendingTasks(newTasks);
-
-            // Add element to todaysTasks
-            setTodaysTasks([...todaysTasks, element]);
+        // Change in database
+        const docRef = doc(db, 'todays-tasks', id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            await updateDoc(docRef, {
+                checked: !docSnap.data().checked,
+            });
         }
     }
 
-    function deleteTask(id, pathname) {
+    async function moveTask(id, pathname) {
         if (pathname === '/tasks') {
-            const newTasks = todaysTasks.filter((task) => task._id !== id);
-            setTodaysTasks(newTasks);
+            const task =
+                todaysTasks[todaysTasks.findIndex((task) => task._id === id)];
+            await deleteTask(task._id, pathname);
+            await setDoc(doc(db, 'pending-tasks', task._id), { ...task });
         } else if (pathname === '/assignments') {
-            const newTasks = pendingTasks.filter((task) => task._id !== id);
-            setPendingTasks(newTasks);
+            const task =
+                pendingTasks[pendingTasks.findIndex((task) => task._id === id)];
+            await deleteTask(task._id, pathname);
+            await setDoc(doc(db, 'todays-tasks', task._id), { ...task });
         }
     }
 
@@ -143,12 +150,15 @@ export const TasksProvider = ({ children }) => {
         <TasksContext.Provider
             value={{
                 todaysTasks,
+                fetchTodaysTasks,
                 pendingTasks,
+                fetchPendingTasks,
                 colorPalette,
                 toggleCheck,
                 deleteTask,
                 daysToDueDate,
                 moveTask,
+                addTask,
             }}
         >
             {children}

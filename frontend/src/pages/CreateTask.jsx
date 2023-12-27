@@ -4,18 +4,18 @@ import Header from '../components/Header';
 import { FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 import TasksContext from '../context/tasks/TasksContext';
 import FormButton from '../components/FormButton';
+import { v4 as uuidv4 } from 'uuid';
 
 // TODO: Let user choose a color from a color palette
 
 function CreateTask() {
-    const { todaysTasks, pendingTasks, colorPalette } =
-        useContext(TasksContext);
+    const { todaysTasks, pendingTasks, addTask } = useContext(TasksContext);
     const { dashboard } = useParams();
 
     const [formData, setFormData] = useState({
-        group: 'MATH-252',
-        todo: 'Section 8.2',
-        dueDate: '2023-11-27',
+        group: '',
+        todo: '',
+        dueDate: '',
         color: '#0000ff',
     });
 
@@ -42,16 +42,12 @@ function CreateTask() {
 
         const newTask = {
             ...formData,
+            dueDate: new Date(dueDate),
             checked: false,
-            _id: Math.random() * 1000,
+            _id: uuidv4(),
         };
 
-        if (dashboard === 'tasks') {
-            todaysTasks.push(newTask);
-        } else if (dashboard === 'assignments') {
-            pendingTasks.push(newTask);
-        }
-
+        addTask(newTask, dashboard);
         navigate(`/${dashboard}`);
     }
 
@@ -59,7 +55,7 @@ function CreateTask() {
         <>
             <Header title={'Create Task'} icon={<FaCirclePlus />} />
             <form onSubmit={createTask} className="p-8 space-y-10 font-figtree">
-                <div className="flex flex-col">
+                <div>
                     <label htmlFor="group" className="text-baby-white">
                         Class
                     </label>
@@ -67,6 +63,7 @@ function CreateTask() {
                         <input
                             type="text"
                             id="group"
+                            placeholder="MATH-252"
                             value={group}
                             onChange={onMutate}
                             className=" text-[#0000ff] border-b-2 border-light-blue w-full outline-none font-shantell-sans font-medium uppercase"
@@ -80,20 +77,21 @@ function CreateTask() {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col">
-                    <label htmlFor="todo" className="text-baby-white">
+                <div>
+                    <label htmlFor="todo" className="block text-baby-white">
                         Assignment
                     </label>
                     <input
                         id="todo"
                         type="text"
+                        placeholder="Section 8.2"
                         value={todo}
                         onChange={onMutate}
-                        className="border-b-2 border-light-blue outline-none font-shantell-sans"
+                        className="w-full border-b-2 border-light-blue outline-none font-shantell-sans"
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label htmlFor="dueDate" className="text-baby-white">
+                <div>
+                    <label htmlFor="dueDate" className="block text-baby-white">
                         Due Date
                     </label>
                     <input
@@ -101,7 +99,7 @@ function CreateTask() {
                         type="date"
                         value={dueDate}
                         onChange={onMutate}
-                        className="border-b-2 border-light-blue outline-none"
+                        className="w-full border-b-2 border-light-blue outline-none"
                     />
                 </div>
                 <FormButton label={'Create'} />

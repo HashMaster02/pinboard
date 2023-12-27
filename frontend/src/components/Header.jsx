@@ -7,10 +7,7 @@ function Header({ title, icon, showDate }) {
     return (
         <div
             className="min-h-[120px] 
-                  flex flex-col justify-center gap-3 
-                  p-6 
-                  font-figtre rounded-b-3xl
-                  bg-baby-white"
+                  flex flex-col justify-center gap-3 p-6 font-figtre rounded-b-3xl bg-baby-white"
         >
             <div className="flex items-center text-4xl gap-2">
                 {icon}
