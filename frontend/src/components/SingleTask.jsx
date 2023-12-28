@@ -6,8 +6,7 @@ import TasksContext from '../context/tasks/TasksContext';
 import PopupMenu from './PopupMenu';
 
 function SingleTask({ id, group, task, dueDate, color, checked }) {
-    const { toggleCheck, daysToDueDate, colorPalette } =
-        useContext(TasksContext);
+    const { toggleCheck, daysToDueDate } = useContext(TasksContext);
     const [showMenu, setShowMenu] = useState(false);
     const pathname = useLocation().pathname;
     const daysLeft = daysToDueDate(dueDate);

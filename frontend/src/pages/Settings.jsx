@@ -1,4 +1,6 @@
+import Header from '../components/Header';
+
 function Settings() {
-    return <div>Settings</div>;
+    return <Header title="Settings" />;
 }
 export default Settings;

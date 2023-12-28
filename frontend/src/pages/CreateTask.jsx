@@ -1,26 +1,54 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import { FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
+import { FaCirclePlus, FaCircleLeft, FaPalette } from 'react-icons/fa6';
 import TasksContext from '../context/tasks/TasksContext';
 import FormButton from '../components/FormButton';
+import ColorMenu from '../components/ColorMenu';
 import { v4 as uuidv4 } from 'uuid';
-
-// TODO: Let user choose a color from a color palette
+import { useAuthStatus } from '../hooks/useAuthStatus';
 
 function CreateTask() {
-    const { todaysTasks, pendingTasks, addTask } = useContext(TasksContext);
+    const { addTask, fetchColorPalette, colorPalette } =
+        useContext(TasksContext);
     const { dashboard } = useParams();
 
+    const [showPalette, setShowPalette] = useState(false);
+    const { loggedIn } = useAuthStatus();
     const [formData, setFormData] = useState({
         group: '',
         todo: '',
         dueDate: '',
         color: '#0000ff',
     });
-
     const { group, todo, dueDate, color } = formData;
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (loggedIn) {
+            fetchColorPalette();
+        }
+    }, [loggedIn]);
+
+    document.addEventListener('click', (e) => {
+        if (showPalette && e.target.id !== 'color-palette') {
+            setShowPalette(false);
+        }
+    });
+
+    function openMenu(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        setShowPalette(!showPalette);
+    }
+
+    function selectColor(e) {
+        e.preventDefault();
+
+        const hexCol = toHexCode(e.target.style.backgroundColor);
+        document.getElementById('group').style.color = hexCol;
+        setFormData({ ...formData, color: hexCol });
+    }
 
     function onMutate(e) {
         e.preventDefault();
@@ -68,6 +96,21 @@ function CreateTask() {
                             onChange={onMutate}
                             className=" text-[#0000ff] border-b-2 border-light-blue w-full outline-none font-shantell-sans font-medium uppercase"
                         />
+                        <div
+                            className="inline-block"
+                            onClick={(e) => openMenu(e)}
+                        >
+                            <FaPalette
+                                className="text-3xl text-dark-blue"
+                                id="color-palette"
+                            />
+                            {showPalette && (
+                                <ColorMenu
+                                    colors={colorPalette}
+                                    clickHandler={selectColor}
+                                />
+                            )}
+                        </div>
                         <input
                             id="color"
                             type="color"
@@ -113,3 +156,18 @@ function CreateTask() {
     );
 }
 export default CreateTask;
+
+function toHexCode(rgb) {
+    const color = rgb.toString();
+    const rgba = color.replace(/^rgba?\(|\s+|\)$/g, '').split(',');
+
+    const hex = `#${(
+        (1 << 24) +
+        (parseInt(rgba[0]) << 16) +
+        (parseInt(rgba[1]) << 8) +
+        parseInt(rgba[2])
+    )
+        .toString(16)
+        .slice(1)}`;
+    return hex;
+}

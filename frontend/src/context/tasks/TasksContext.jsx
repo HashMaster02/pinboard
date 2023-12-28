@@ -13,6 +13,7 @@ import {
     Timestamp,
 } from 'firebase/firestore';
 import { db } from '../../firebase.config';
+
 const TasksContext = createContext();
 
 export const TasksProvider = ({ children }) => {
@@ -47,11 +48,22 @@ export const TasksProvider = ({ children }) => {
         setPendingTasks(tasks);
     }
 
-    function fetchColorPalette() {
-        setColorPalette(dummyData.colors);
+    async function fetchColorPalette() {
+        const q = query(
+            collection(db, 'colors'),
+            where('user-id', '==', userId)
+        );
+        const querySnapshot = await getDocs(q);
+        const data = await querySnapshot.docs[0].data().recents;
+        setColorPalette(data);
     }
 
     async function addTask(task, pathname) {
+        if (!colorPalette.includes(task.color)) {
+            // Add to color palette
+            await addNewColor(task.color);
+        }
+
         if (pathname === 'tasks') {
             todaysTasks.push(task);
 
@@ -106,6 +118,30 @@ export const TasksProvider = ({ children }) => {
         }
     }
 
+    async function addNewColor(color) {
+        const q = query(
+            collection(db, 'colors'),
+            where('user-id', '==', userId)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            await setDoc(doc(db, 'colors', userId), {
+                recents: [color],
+                'user-id': userId,
+            });
+            return;
+        }
+
+        setDoc(
+            doc(db, 'colors', querySnapshot.docs[0].id),
+            {
+                recents: [...colorPalette, color],
+            },
+            { merge: true }
+        );
+    }
+
     async function toggleCheck(id) {
         // Change locally in state
         const newTasks = todaysTasks.map((task) => {
@@ -153,6 +189,7 @@ export const TasksProvider = ({ children }) => {
                 fetchTodaysTasks,
                 pendingTasks,
                 fetchPendingTasks,
+                fetchColorPalette,
                 colorPalette,
                 toggleCheck,
                 deleteTask,
