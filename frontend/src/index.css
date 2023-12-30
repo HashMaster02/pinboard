@@ -22,7 +22,7 @@
     height: 24px;
     background-color: white;
     border-radius: 6px;
-    transform: translate(-50%, -50%);
+    transform: translate(-55%, -50%);
 }
 
 [type='checkbox']:checked + label::after {
@@ -36,7 +36,7 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    transform: translate(-50%, -50%);
+    transform: translate(-55%, -50%);
 }
 
 [type='checkbox']:checked + label,

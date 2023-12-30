@@ -10,8 +10,6 @@ import Header from '../components/Header';
 import FormButton from '../components/FormButton';
 import { FaRightToBracket, FaCircleLeft } from 'react-icons/fa6';
 
-// TODO: Add user sign up functionality
-
 function SignUp() {
     const [formData, setFormData] = useState({
         email: '',

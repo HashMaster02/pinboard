@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import SingleTask from '../components/SingleTask';
-import TasksContext from '../context/tasks/TasksContext';
+import TasksContext from '../context/TasksContext';
 import { FaClipboardList, FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 import Loading from '../components/Loading';
 

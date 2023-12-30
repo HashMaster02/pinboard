@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react';
-import { useAuthStatus } from '../../hooks/useAuthStatus';
+import { useAuthStatus } from '../hooks/useAuthStatus';
 import {
     collection,
     query,
@@ -12,7 +12,7 @@ import {
     setDoc,
     Timestamp,
 } from 'firebase/firestore';
-import { db } from '../../firebase.config';
+import { db } from '../firebase.config';
 
 const TasksContext = createContext();
 
@@ -176,6 +176,32 @@ export const TasksProvider = ({ children }) => {
         }
     }
 
+    async function resetTasks() {
+        if (userId === null) {
+            return;
+        }
+        const docRef = await getDoc(doc(db, 'last-login', userId));
+
+        if (docRef.exists()) {
+            const previousDate = docRef.data().previous.toDate();
+            const currentDate = new Date();
+
+            if (currentDate.getDate() === previousDate.getDate()) {
+                await fetchTodaysTasks();
+                todaysTasks.forEach(async (task) => {
+                    if (task.checked) {
+                        await deleteTask(task._id, '/tasks');
+                    } else {
+                        await setDoc(doc(db, 'pending-tasks', task._id), {
+                            ...task,
+                        });
+                        await deleteTask(task._id, '/tasks');
+                    }
+                });
+            }
+        }
+    }
+
     function daysToDueDate(due) {
         // Calculates the number of days between today and date given
         const today = new Date();
@@ -196,6 +222,7 @@ export const TasksProvider = ({ children }) => {
                 daysToDueDate,
                 moveTask,
                 addTask,
+                resetTasks,
             }}
         >
             {children}

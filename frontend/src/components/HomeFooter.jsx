@@ -1,6 +1,10 @@
 import MenuIcon from './MenuIcon';
-import { IoInformationCircle } from 'react-icons/io5';
-import { FaGear, FaRightToBracket, FaUser } from 'react-icons/fa6';
+import {
+    FaGear,
+    FaRightToBracket,
+    FaUser,
+    FaCircleInfo,
+} from 'react-icons/fa6';
 import { useAuthStatus } from '../hooks/useAuthStatus';
 
 function HomeFooter() {
@@ -8,12 +12,7 @@ function HomeFooter() {
 
     return (
         <div className="min-h-[120px] flex justify-center gap-3 p-6 font-figtre rounded-t-3xl bg-bluish-turqoise">
-            <MenuIcon
-                title={'About'}
-                icon={<IoInformationCircle />}
-                route="/about"
-            />
-            <MenuIcon title={'Settings'} icon={<FaGear />} route="/settings" />
+            <MenuIcon title={'About'} icon={<FaCircleInfo />} route="/about" />
             {loggedIn ? (
                 <MenuIcon
                     title={'Profile'}

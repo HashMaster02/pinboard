@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { FaCirclePlus, FaCircleLeft, FaPalette } from 'react-icons/fa6';
-import TasksContext from '../context/tasks/TasksContext';
+import TasksContext from '../context/TasksContext';
 import FormButton from '../components/FormButton';
 import ColorMenu from '../components/ColorMenu';
 import { v4 as uuidv4 } from 'uuid';

@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BsExclamationCircleFill } from 'react-icons/bs';
 import { FaEllipsis, FaTriangleExclamation } from 'react-icons/fa6';
-import TasksContext from '../context/tasks/TasksContext';
+import TasksContext from '../context/TasksContext';
 import PopupMenu from './PopupMenu';
 
 function SingleTask({ id, group, task, dueDate, color, checked }) {
@@ -17,7 +17,7 @@ function SingleTask({ id, group, task, dueDate, color, checked }) {
             return;
         }
         document.getElementById(`task-${id}`).style.color = color;
-    });
+    }, [checked]);
 
     document.addEventListener('click', (e) => {
         if (showMenu && e.target.id !== 'menu-button') {

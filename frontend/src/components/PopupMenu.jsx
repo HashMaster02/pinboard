@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import TasksContext from '../context/tasks/TasksContext';
+import TasksContext from '../context/TasksContext';
 
 function PopupMenu({ id }) {
     const currentPath = useLocation().pathname;

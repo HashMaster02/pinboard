@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaListCheck, FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 import Header from '../components/Header';
 import SingleTask from '../components/SingleTask';
-import TasksContext from '../context/tasks/TasksContext';
+import TasksContext from '../context/TasksContext';
 import Loading from '../components/Loading';
 
 function Tasks() {

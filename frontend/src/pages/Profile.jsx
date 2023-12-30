@@ -5,13 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { FaUser } from 'react-icons/fa6';
 import { FaCircleLeft } from 'react-icons/fa6';
+import SettingsContext from '../context/SettingsContext';
 
 function Profile() {
     const navigate = useNavigate();
     const auth = getAuth(app);
+    const { setLoginHasBeenUpdated } = useContext(SettingsContext);
 
     function signOut(userObject) {
         userObject.signOut();
+        setLoginHasBeenUpdated(false);
         navigate('/');
     }
 
