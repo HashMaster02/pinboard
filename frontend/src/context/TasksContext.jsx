@@ -186,7 +186,7 @@ export const TasksProvider = ({ children }) => {
             const previousDate = docRef.data().previous.toDate();
             const currentDate = new Date();
 
-            if (currentDate.getDate() === previousDate.getDate()) {
+            if (currentDate.getDate() !== previousDate.getDate()) {
                 await fetchTodaysTasks();
                 todaysTasks.forEach(async (task) => {
                     if (task.checked) {
