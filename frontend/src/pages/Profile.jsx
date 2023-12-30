@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase.config';
