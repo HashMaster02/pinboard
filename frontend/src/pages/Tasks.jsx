@@ -5,22 +5,46 @@ import Header from '../components/Header';
 import SingleTask from '../components/SingleTask';
 import TasksContext from '../context/TasksContext';
 import Loading from '../components/Loading';
+import { useAuthStatus } from '../hooks/useAuthStatus';
 
 function Tasks() {
     const [loading, setLoading] = useState(true);
     const { todaysTasks, fetchTodaysTasks } = useContext(TasksContext);
+    const { userId } = useAuthStatus();
 
     useEffect(() => {
-        fetchTodaysTasks().then(() => {
+        async function getTasks() {
+            if (userId !== null) {
+                await fetchTodaysTasks(userId);
+            }
+
             setLoading(false);
-        });
-    }, [loading]);
+        }
+
+        getTasks();
+    }, [loading, userId]);
 
     if (loading) {
         return (
             <>
                 <Header title={'Tasks'} icon={<FaListCheck />} showDate />
                 <Loading />
+            </>
+        );
+    }
+
+    if (!loading && userId === null) {
+        return (
+            <>
+                <Header title={'Assignments'} icon={<FaListCheck />} showDate />
+                <div className="m-6 text-center font-figtree text-light-blue">
+                    Please login to view your tasks
+                </div>
+                <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
+                    <Link to="/">
+                        <FaCircleLeft className="ml-8" />
+                    </Link>
+                </div>
             </>
         );
     }

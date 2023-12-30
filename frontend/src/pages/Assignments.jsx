@@ -5,16 +5,24 @@ import SingleTask from '../components/SingleTask';
 import TasksContext from '../context/TasksContext';
 import { FaClipboardList, FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 import Loading from '../components/Loading';
+import { useAuthStatus } from '../hooks/useAuthStatus';
 
 function Assignments() {
     const [loading, setLoading] = useState(true);
     const { pendingTasks, fetchPendingTasks } = useContext(TasksContext);
+    const { userId } = useAuthStatus();
 
     useEffect(() => {
-        fetchPendingTasks().then(() => {
+        async function getTasks() {
+            if (userId !== null) {
+                await fetchPendingTasks(userId);
+            }
+
             setLoading(false);
-        });
-    }, [loading]);
+        }
+
+        getTasks();
+    }, [loading, userId]);
 
     if (loading) {
         return (
@@ -25,6 +33,26 @@ function Assignments() {
                     showDate
                 />
                 <Loading />
+            </>
+        );
+    }
+
+    if (!loading && userId === null) {
+        return (
+            <>
+                <Header
+                    title={'Assignments'}
+                    icon={<FaClipboardList />}
+                    showDate
+                />
+                <div className="m-6 text-center font-figtree text-light-blue">
+                    Please login to view your assignments
+                </div>
+                <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
+                    <Link to="/">
+                        <FaCircleLeft className="ml-8" />
+                    </Link>
+                </div>
             </>
         );
     }

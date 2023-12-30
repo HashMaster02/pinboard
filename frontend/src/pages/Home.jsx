@@ -16,7 +16,7 @@ function Home() {
     const { userId } = useAuthStatus();
 
     useEffect(() => {
-        const runReset = async () => {
+        async function runReset() {
             if (userId !== null) {
                 await resetTasks();
                 if (!loginHasBeenUpdated) {
@@ -24,7 +24,7 @@ function Home() {
                     setLoginHasBeenUpdated(true);
                 }
             }
-        };
+        }
 
         runReset();
     }, [userId]);
