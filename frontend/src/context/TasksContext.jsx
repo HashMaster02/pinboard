@@ -65,10 +65,6 @@ export const TasksProvider = ({ children }) => {
         }
 
         if (pathname === 'tasks') {
-            todaysTasks.push(task);
-
-            // Add to database
-
             await setDoc(doc(db, 'todays-tasks', task._id), {
                 _id: task._id,
                 group: task.group,
@@ -82,9 +78,6 @@ export const TasksProvider = ({ children }) => {
                 'user-id': userId,
             });
         } else if (pathname === 'assignments') {
-            pendingTasks.push(task);
-
-            // Add to database
             await setDoc(doc(db, 'pending-tasks', task._id), {
                 _id: task._id,
                 group: task.group,
