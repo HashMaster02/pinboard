@@ -6,9 +6,10 @@ import {
 } from 'firebase/auth';
 import { app } from '../firebase.config.js';
 import { Link } from 'react-router-dom';
+import { FaRightToBracket, FaCircleLeft } from 'react-icons/fa6';
 import Header from '../components/Header';
 import FormButton from '../components/FormButton';
-import { FaRightToBracket, FaCircleLeft } from 'react-icons/fa6';
+import PageFooter from '../components/PageFooter';
 
 function SignUp() {
     const [formData, setFormData] = useState({
@@ -91,11 +92,7 @@ function SignUp() {
                     </p>
                 </Link>
             </form>
-            <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
-                <Link to={'/'}>
-                    <FaCircleLeft className="ml-8" />
-                </Link>
-            </div>
+            <PageFooter buttons={[{ route: '/', icon: <FaCircleLeft /> }]} />
         </>
     );
 }

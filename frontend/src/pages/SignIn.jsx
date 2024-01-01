@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { app } from '../firebase.config';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { FaRightToBracket, FaCircleLeft } from 'react-icons/fa6';
 import Header from '../components/Header';
 import FormButton from '../components/FormButton';
-import { FaRightToBracket, FaCircleLeft } from 'react-icons/fa6';
+import PageFooter from '../components/PageFooter';
 
 function SignIn() {
     const [formData, setFormData] = useState({
@@ -44,7 +45,10 @@ function SignIn() {
     return (
         <>
             <Header title={'Sign In'} icon={<FaRightToBracket />} />
-            <form className="p-8 space-y-10 font-figtree" onSubmit={loginUser}>
+            <form
+                className="p-8 mb-20 space-y-10 font-figtree"
+                onSubmit={loginUser}
+            >
                 <div>
                     <label htmlFor="email" className="block text-baby-white">
                         Email
@@ -76,11 +80,7 @@ function SignIn() {
                     </p>
                 </Link>
             </form>
-            <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
-                <Link to={'/'}>
-                    <FaCircleLeft className="ml-8" />
-                </Link>
-            </div>
+            <PageFooter buttons={[{ route: '/', icon: <FaCircleLeft /> }]} />
         </>
     );
 }

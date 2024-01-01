@@ -1,12 +1,12 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase.config';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 import { FaUser } from 'react-icons/fa6';
 import { FaCircleLeft } from 'react-icons/fa6';
+import Header from '../components/Header';
 import SettingsContext from '../context/SettingsContext';
+import PageFooter from '../components/PageFooter';
 
 function Profile() {
     const navigate = useNavigate();
@@ -40,11 +40,7 @@ function Profile() {
                     Sign Out
                 </button>
             </div>
-            <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
-                <Link to={'/'}>
-                    <FaCircleLeft className="ml-8" />
-                </Link>
-            </div>
+            <PageFooter buttons={[{ route: '/', icon: <FaCircleLeft /> }]} />
         </>
     );
 }

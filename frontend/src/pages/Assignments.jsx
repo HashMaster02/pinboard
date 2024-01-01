@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useAuthStatus } from '../hooks/useAuthStatus';
+import { FaClipboardList, FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 import Header from '../components/Header';
 import SingleTask from '../components/SingleTask';
 import TasksContext from '../context/TasksContext';
-import { FaClipboardList, FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
 import Loading from '../components/Loading';
-import { useAuthStatus } from '../hooks/useAuthStatus';
+import PageFooter from '../components/PageFooter';
 
 function Assignments() {
     const [loading, setLoading] = useState(true);
@@ -48,11 +48,9 @@ function Assignments() {
                 <div className="m-6 text-center font-figtree text-light-blue">
                     Please login to view your assignments
                 </div>
-                <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
-                    <Link to="/">
-                        <FaCircleLeft className="ml-8" />
-                    </Link>
-                </div>
+                <PageFooter
+                    buttons={[{ route: '/', icon: <FaCircleLeft /> }]}
+                />
             </>
         );
     }
@@ -60,7 +58,7 @@ function Assignments() {
     return (
         <>
             <Header title={'Assignments'} icon={<FaClipboardList />} showDate />
-            <ul className="m-6 space-y-4">
+            <ul className="m-6 mb-20 space-y-4">
                 {pendingTasks.length === 0 ? (
                     <div className="text-center font-figtree text-light-blue">
                         No Assignments
@@ -79,14 +77,15 @@ function Assignments() {
                     ))
                 )}
             </ul>
-            <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
-                <Link to="/">
-                    <FaCircleLeft className="ml-8" />
-                </Link>
-                <Link to="/assignments/create">
-                    <FaCirclePlus className="mr-8" />
-                </Link>
-            </div>
+            <PageFooter
+                buttons={[
+                    { route: '/', icon: <FaCircleLeft /> },
+                    {
+                        route: '/assignments/create',
+                        icon: <FaCirclePlus />,
+                    },
+                ]}
+            />
         </>
     );
 }

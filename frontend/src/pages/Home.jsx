@@ -1,11 +1,11 @@
 import { useContext, useEffect } from 'react';
+import { FaHouse, FaListCheck, FaClipboardList } from 'react-icons/fa6';
+import { useAuthStatus } from '../hooks/useAuthStatus';
 import Header from '../components/Header';
 import HomeFooter from '../components/HomeFooter';
 import MenuIcon from '../components/MenuIcon';
-import { FaHouse, FaListCheck, FaClipboardList } from 'react-icons/fa6';
 import AuthContext from '../context/AuthContext';
 import TasksContext from '../context/TasksContext';
-import { useAuthStatus } from '../hooks/useAuthStatus';
 import SettingsContext from '../context/SettingsContext';
 
 function Home() {

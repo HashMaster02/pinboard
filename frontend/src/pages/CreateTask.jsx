@@ -1,12 +1,13 @@
 import { useState, useContext, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 import { FaCirclePlus, FaCircleLeft, FaPalette } from 'react-icons/fa6';
+import { v4 as uuidv4 } from 'uuid';
+import { useAuthStatus } from '../hooks/useAuthStatus';
+import Header from '../components/Header';
 import TasksContext from '../context/TasksContext';
 import FormButton from '../components/FormButton';
 import ColorMenu from '../components/ColorMenu';
-import { v4 as uuidv4 } from 'uuid';
-import { useAuthStatus } from '../hooks/useAuthStatus';
+import PageFooter from '../components/PageFooter';
 
 function CreateTask() {
     const { addTask, fetchColorPalette, colorPalette } =
@@ -147,11 +148,7 @@ function CreateTask() {
                 </div>
                 <FormButton label={'Create'} />
             </form>
-            <div className="absolute flex justify-between w-full text-5xl bottom-[40px] text-dark-blue">
-                <Link to={`/${dashboard}`}>
-                    <FaCircleLeft className="ml-8" />
-                </Link>
-            </div>
+            <PageFooter buttons={[{ route: '/', icon: <FaCircleLeft /> }]} />
         </>
     );
 }
