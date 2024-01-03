@@ -58,6 +58,22 @@ export const TasksProvider = ({ children }) => {
         setColorPalette(data);
     }
 
+    async function deleteColor(color) {
+        const q = query(
+            collection(db, 'colors'),
+            where('user-id', '==', userId)
+        );
+        const querySnapshot = await getDocs(q);
+        const docRef = doc(db, 'colors', querySnapshot.docs[0].id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const newColors = docSnap.data().recents.filter((c) => c !== color);
+            await updateDoc(docRef, {
+                recents: newColors,
+            });
+        }
+    }
+
     async function addTask(task, pathname) {
         if (!colorPalette.includes(task.color)) {
             // Add to color palette
@@ -209,6 +225,7 @@ export const TasksProvider = ({ children }) => {
                 pendingTasks,
                 fetchPendingTasks,
                 fetchColorPalette,
+                deleteColor,
                 colorPalette,
                 toggleCheck,
                 deleteTask,

@@ -10,8 +10,7 @@ import ColorMenu from '../components/ColorMenu';
 import PageFooter from '../components/PageFooter';
 
 function CreateTask() {
-    const { addTask, fetchColorPalette, colorPalette } =
-        useContext(TasksContext);
+    const { addTask } = useContext(TasksContext);
     const { dashboard } = useParams();
 
     const [showPalette, setShowPalette] = useState(false);
@@ -24,12 +23,6 @@ function CreateTask() {
     });
     const { group, todo, dueDate, color } = formData;
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (loggedIn) {
-            fetchColorPalette();
-        }
-    }, [loggedIn]);
 
     document.addEventListener('click', (e) => {
         if (showPalette && e.target.id !== 'color-palette') {
@@ -106,10 +99,7 @@ function CreateTask() {
                                 id="color-palette"
                             />
                             {showPalette && (
-                                <ColorMenu
-                                    colors={colorPalette}
-                                    clickHandler={selectColor}
-                                />
+                                <ColorMenu clickHandler={selectColor} />
                             )}
                         </div>
                         <input

@@ -1,4 +1,18 @@
-function ColorMenu({ colors, clickHandler }) {
+import { useContext, useEffect } from 'react';
+import TasksContext from '../context/TasksContext';
+
+function ColorMenu({ clickHandler }) {
+    const { deleteColor, fetchColorPalette, colorPalette } =
+        useContext(TasksContext);
+
+    useEffect(() => {
+        fetchColorPalette();
+    }, [colorPalette]);
+
+    async function removeColor(color) {
+        await deleteColor(color);
+    }
+
     return (
         <div
             id="color-menu"
@@ -8,12 +22,18 @@ function ColorMenu({ colors, clickHandler }) {
                 id="color-list"
                 className="py-4 px-2 h-fit flex flex-wrap justify-center gap-2"
             >
-                {colors.length > 0 ? (
-                    colors.map((color) => {
+                {colorPalette.length > 0 ? (
+                    colorPalette.map((color) => {
                         return (
-                            <li key={color}>
+                            <li key={color} className="relative">
                                 <button
-                                    className="block m-auto w-6 h-6 rounded-full"
+                                    className="absolute -right-1 -top-2 bg-black text-white text-xs p-1 rounded-full w-6 h-6"
+                                    onClick={() => removeColor(color)}
+                                >
+                                    X
+                                </button>
+                                <button
+                                    className="block m-auto w-10 h-10 rounded-full"
                                     style={{ backgroundColor: color }}
                                     onClick={clickHandler}
                                 ></button>
