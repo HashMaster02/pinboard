@@ -1,5 +1,5 @@
-import { createContext, useState } from 'react';
-import { useAuthStatus } from '../hooks/useAuthStatus';
+import { createContext, useState } from "react";
+import { useAuthStatus } from "../hooks/useAuthStatus";
 import {
     collection,
     query,
@@ -11,8 +11,8 @@ import {
     deleteDoc,
     setDoc,
     Timestamp,
-} from 'firebase/firestore';
-import { db } from '../firebase.config';
+} from "firebase/firestore";
+import { db } from "../firebase.config";
 
 const TasksContext = createContext();
 
@@ -24,8 +24,8 @@ export const TasksProvider = ({ children }) => {
 
     async function fetchTodaysTasks() {
         const q = query(
-            collection(db, 'todays-tasks'),
-            where('user-id', '==', userId)
+            collection(db, "todays-tasks"),
+            where("user-id", "==", userId)
         );
         const querySnapshot = await getDocs(q);
         const tasks = [];
@@ -37,8 +37,8 @@ export const TasksProvider = ({ children }) => {
 
     async function fetchPendingTasks() {
         const q = query(
-            collection(db, 'pending-tasks'),
-            where('user-id', '==', userId)
+            collection(db, "pending-tasks"),
+            where("user-id", "==", userId)
         );
         const querySnapshot = await getDocs(q);
         const tasks = [];
@@ -50,8 +50,8 @@ export const TasksProvider = ({ children }) => {
 
     async function fetchColorPalette() {
         const q = query(
-            collection(db, 'colors'),
-            where('user-id', '==', userId)
+            collection(db, "colors"),
+            where("user-id", "==", userId)
         );
         const querySnapshot = await getDocs(q);
         const data = await querySnapshot.docs[0].data().recents;
@@ -60,11 +60,11 @@ export const TasksProvider = ({ children }) => {
 
     async function deleteColor(color) {
         const q = query(
-            collection(db, 'colors'),
-            where('user-id', '==', userId)
+            collection(db, "colors"),
+            where("user-id", "==", userId)
         );
         const querySnapshot = await getDocs(q);
-        const docRef = doc(db, 'colors', querySnapshot.docs[0].id);
+        const docRef = doc(db, "colors", querySnapshot.docs[0].id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             const newColors = docSnap.data().recents.filter((c) => c !== color);
@@ -80,8 +80,8 @@ export const TasksProvider = ({ children }) => {
             await addNewColor(task.color);
         }
 
-        if (pathname === 'tasks') {
-            await setDoc(doc(db, 'todays-tasks', task._id), {
+        if (pathname === "tasks") {
+            await setDoc(doc(db, "todays-tasks", task._id), {
                 _id: task._id,
                 group: task.group,
                 todo: task.todo,
@@ -91,10 +91,10 @@ export const TasksProvider = ({ children }) => {
                 ),
                 color: task.color,
                 checked: task.checked,
-                'user-id': userId,
+                "user-id": userId,
             });
-        } else if (pathname === 'assignments') {
-            await setDoc(doc(db, 'pending-tasks', task._id), {
+        } else if (pathname === "assignments") {
+            await setDoc(doc(db, "pending-tasks", task._id), {
                 _id: task._id,
                 group: task.group,
                 todo: task.todo,
@@ -104,46 +104,46 @@ export const TasksProvider = ({ children }) => {
                 ),
                 color: task.color,
                 checked: task.checked,
-                'user-id': userId,
+                "user-id": userId,
             });
         }
     }
 
     async function deleteTask(id, pathname) {
-        if (pathname === '/tasks') {
+        if (pathname === "/tasks") {
             // Remove from state
             const newTasks = todaysTasks.filter((task) => task._id !== id);
             setTodaysTasks(newTasks);
 
             // Remove from database
-            await deleteDoc(doc(db, 'todays-tasks', id));
-        } else if (pathname === '/assignments') {
+            await deleteDoc(doc(db, "todays-tasks", id));
+        } else if (pathname === "/assignments") {
             // Remove from state
             const newTasks = pendingTasks.filter((task) => task._id !== id);
             setPendingTasks(newTasks);
 
             // Remove from database
-            await deleteDoc(doc(db, 'pending-tasks', id));
+            await deleteDoc(doc(db, "pending-tasks", id));
         }
     }
 
     async function addNewColor(color) {
         const q = query(
-            collection(db, 'colors'),
-            where('user-id', '==', userId)
+            collection(db, "colors"),
+            where("user-id", "==", userId)
         );
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
-            await setDoc(doc(db, 'colors', userId), {
+            await setDoc(doc(db, "colors", userId), {
                 recents: [color],
-                'user-id': userId,
+                "user-id": userId,
             });
             return;
         }
 
         setDoc(
-            doc(db, 'colors', querySnapshot.docs[0].id),
+            doc(db, "colors", querySnapshot.docs[0].id),
             {
                 recents: [...colorPalette, color],
             },
@@ -162,7 +162,7 @@ export const TasksProvider = ({ children }) => {
         setTodaysTasks(newTasks);
 
         // Change in database
-        const docRef = doc(db, 'todays-tasks', id);
+        const docRef = doc(db, "todays-tasks", id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             await updateDoc(docRef, {
@@ -172,24 +172,21 @@ export const TasksProvider = ({ children }) => {
     }
 
     async function moveTask(id, pathname) {
-        if (pathname === '/tasks') {
+        if (pathname === "/tasks") {
             const task =
                 todaysTasks[todaysTasks.findIndex((task) => task._id === id)];
             await deleteTask(task._id, pathname);
-            await setDoc(doc(db, 'pending-tasks', task._id), { ...task });
-        } else if (pathname === '/assignments') {
+            await setDoc(doc(db, "pending-tasks", task._id), { ...task });
+        } else if (pathname === "/assignments") {
             const task =
                 pendingTasks[pendingTasks.findIndex((task) => task._id === id)];
             await deleteTask(task._id, pathname);
-            await setDoc(doc(db, 'todays-tasks', task._id), { ...task });
+            await setDoc(doc(db, "todays-tasks", task._id), { ...task });
         }
     }
 
     async function resetTasks() {
-        if (userId === null) {
-            return;
-        }
-        const docRef = await getDoc(doc(db, 'last-login', userId));
+        const docRef = await getDoc(doc(db, "last-login", userId));
 
         if (docRef.exists()) {
             const previousDate = docRef.data().previous.toDate();
@@ -199,12 +196,12 @@ export const TasksProvider = ({ children }) => {
                 await fetchTodaysTasks();
                 todaysTasks.forEach(async (task) => {
                     if (task.checked) {
-                        await deleteTask(task._id, '/tasks');
+                        await deleteTask(task._id, "/tasks");
                     } else {
-                        await setDoc(doc(db, 'pending-tasks', task._id), {
+                        await setDoc(doc(db, "pending-tasks", task._id), {
                             ...task,
                         });
-                        await deleteTask(task._id, '/tasks');
+                        await deleteTask(task._id, "/tasks");
                     }
                 });
             }
