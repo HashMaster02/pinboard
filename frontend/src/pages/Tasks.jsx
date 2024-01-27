@@ -1,11 +1,11 @@
-import { useContext, useState, useEffect } from 'react';
-import { FaListCheck, FaCirclePlus, FaCircleLeft } from 'react-icons/fa6';
-import { useAuthStatus } from '../hooks/useAuthStatus';
-import Header from '../components/Header';
-import SingleTask from '../components/SingleTask';
-import TasksContext from '../context/TasksContext';
-import Loading from '../components/Loading';
-import PageFooter from '../components/PageFooter';
+import { useContext, useState, useEffect } from "react";
+import { FaListCheck, FaCirclePlus, FaCircleLeft } from "react-icons/fa6";
+import { useAuthStatus } from "../hooks/useAuthStatus";
+import Header from "../components/Header";
+import SingleTask from "../components/SingleTask";
+import TasksContext from "../context/TasksContext";
+import Loading from "../components/Loading";
+import PageFooter from "../components/PageFooter";
 
 function Tasks() {
     const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ function Tasks() {
     useEffect(() => {
         async function getTasks() {
             if (userId !== null) {
-                await fetchTodaysTasks(userId);
+                await fetchTodaysTasks();
             }
 
             setLoading(false);
@@ -27,7 +27,7 @@ function Tasks() {
     if (loading) {
         return (
             <>
-                <Header title={'Tasks'} icon={<FaListCheck />} showDate />
+                <Header title={"Tasks"} icon={<FaListCheck />} showDate />
                 <Loading />
             </>
         );
@@ -36,13 +36,13 @@ function Tasks() {
     if (!loading && userId === null) {
         return (
             <>
-                <Header title={'Assignments'} icon={<FaListCheck />} showDate />
+                <Header title={"Assignments"} icon={<FaListCheck />} showDate />
                 <div className="m-6 text-center font-figtree text-light-blue">
                     Please login to view your tasks
                 </div>
                 <PageFooter
                     buttons={[
-                        { route: '/', icon: <FaCircleLeft className="ml-8" /> },
+                        { route: "/", icon: <FaCircleLeft className="ml-8" /> },
                     ]}
                 />
             </>
@@ -51,7 +51,7 @@ function Tasks() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Header title={'Tasks'} icon={<FaListCheck />} showDate />
+            <Header title={"Tasks"} icon={<FaListCheck />} showDate />
             <ul className="m-6 mb-20 space-y-4">
                 {todaysTasks.length === 0 ? (
                     <div className="text-center font-figtree text-light-blue">
@@ -73,9 +73,9 @@ function Tasks() {
             </ul>
             <PageFooter
                 buttons={[
-                    { route: '/', icon: <FaCircleLeft /> },
+                    { route: "/", icon: <FaCircleLeft /> },
                     {
-                        route: '/tasks/create',
+                        route: "/tasks/create",
                         icon: <FaCirclePlus />,
                     },
                 ]}

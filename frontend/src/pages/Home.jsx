@@ -1,15 +1,15 @@
-import { useContext, useEffect } from 'react';
-import { FaHouse, FaListCheck, FaClipboardList } from 'react-icons/fa6';
-import { useAuthStatus } from '../hooks/useAuthStatus';
-import Header from '../components/Header';
-import HomeFooter from '../components/HomeFooter';
-import MenuIcon from '../components/MenuIcon';
-import AuthContext from '../context/AuthContext';
-import TasksContext from '../context/TasksContext';
-import SettingsContext from '../context/SettingsContext';
+import { useContext, useEffect } from "react";
+import { FaHouse, FaListCheck, FaClipboardList } from "react-icons/fa6";
+import { useAuthStatus } from "../hooks/useAuthStatus";
+import Header from "../components/Header";
+import HomeFooter from "../components/HomeFooter";
+import MenuIcon from "../components/MenuIcon";
+import AuthContext from "../context/AuthContext";
+import TasksContext from "../context/TasksContext";
+import SettingsContext from "../context/SettingsContext";
 
 function Home() {
-    const { resetTasks } = useContext(TasksContext);
+    const { resetTasks, fetchTodaysTasks } = useContext(TasksContext);
     const { updateLastLogin } = useContext(AuthContext);
     const { loginHasBeenUpdated, setLoginHasBeenUpdated } =
         useContext(SettingsContext);
@@ -32,15 +32,15 @@ function Home() {
     return (
         <>
             <div className=" min-w-full min-h-screen flex flex-col justify-between">
-                <Header title={'Home'} icon={<FaHouse />} showDate />
+                <Header title={"Home"} icon={<FaHouse />} showDate />
                 <div className="grid gap-4 place-content-center">
                     <MenuIcon
-                        title={'Tasks'}
+                        title={"Tasks"}
                         icon={<FaListCheck />}
                         route="/tasks"
                     />
                     <MenuIcon
-                        title={'Manage Assignments'}
+                        title={"Manage Assignments"}
                         icon={<FaClipboardList />}
                         route="/assignments"
                     />

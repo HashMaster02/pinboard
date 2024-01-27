@@ -23,16 +23,20 @@ export const TasksProvider = ({ children }) => {
     const [colorPalette, setColorPalette] = useState([]);
 
     async function fetchTodaysTasks() {
-        const q = query(
-            collection(db, "todays-tasks"),
-            where("user-id", "==", userId)
-        );
-        const querySnapshot = await getDocs(q);
-        const tasks = [];
-        querySnapshot.forEach((doc) => {
-            tasks.push(doc.data());
-        });
-        setTodaysTasks(tasks);
+        try {
+            const q = query(
+                collection(db, "todays-tasks"),
+                where("user-id", "==", userId)
+            );
+            const querySnapshot = await getDocs(q);
+            const tasks = [];
+            querySnapshot.forEach((doc) => {
+                tasks.push(doc.data());
+            });
+            setTodaysTasks(tasks);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async function fetchPendingTasks() {
@@ -193,15 +197,25 @@ export const TasksProvider = ({ children }) => {
             const currentDate = new Date();
 
             if (currentDate.getDate() !== previousDate.getDate()) {
-                await fetchTodaysTasks();
-                todaysTasks.forEach(async (task) => {
-                    if (task.checked) {
-                        await deleteTask(task._id, "/tasks");
+                const q = query(
+                    collection(db, "todays-tasks"),
+                    where("user-id", "==", userId)
+                );
+                const querySnapshot = await getDocs(q);
+                const tasks = [];
+                querySnapshot.forEach(async (docSnap) => {
+                    if (docSnap.data().checked) {
+                        await deleteTask(docSnap.data()._id, "/tasks");
                     } else {
-                        await setDoc(doc(db, "pending-tasks", task._id), {
-                            ...task,
-                        });
-                        await deleteTask(task._id, "/tasks");
+                        await setDoc(
+                            doc(db, "pending-tasks", docSnap.data()._id),
+                            {
+                                ...docSnap.data(),
+                            }
+                        );
+                        await deleteDoc(
+                            doc(db, "todays-tasks", docSnap.data()._id)
+                        );
                     }
                 });
             }
